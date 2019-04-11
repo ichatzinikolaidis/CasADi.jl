@@ -7,10 +7,6 @@ struct SX <: CasadiSymbolicObject
     x::PyCall.PyObject
 end
 
-mutable struct SXmat <: CasadiSymbolicObject
-    x::PyCall.PyObject
-end
-
 ##################################################
 
 ## important override

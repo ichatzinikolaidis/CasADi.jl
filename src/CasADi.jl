@@ -9,7 +9,7 @@ import Base: length, size
 import Base.iterate
 import Base: +, -, *, /, \, ^
 
-export SX, SXmat
+export SX
 export True, False
 export N
 
