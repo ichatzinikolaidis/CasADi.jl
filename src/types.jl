@@ -2,7 +2,7 @@
 ## CasadiSymbolicObject types have field x::PyCall.PyObject
 
 ## Symbol class for controlling dispatch
-abstract type CasadiSymbolicObject <: Number end
+abstract type CasadiSymbolicObject <: Real end
 struct SX <: CasadiSymbolicObject
     x::PyCall.PyObject
 end

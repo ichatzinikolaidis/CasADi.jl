@@ -1,5 +1,5 @@
-## avoid PyObject conversion as possible
-SX(x::T) where {T <: Number} = casadi.SX(x)
+SX(x::SX) = x
+SX(x::T) where {T <: Union{Real, AbstractVecOrMat}} = casadi.hcat([casadi.vcat(i) for i in eachcol(x)])
 
 SX(x::AbstractString) = casadi.SX.sym(x)
 SX(x::AbstractString, i1::Integer) = casadi.SX.sym(x, i1, 1)

@@ -1,5 +1,5 @@
 ## promote up to symbolic so that math ops work
-promote_rule(::Type{T}, ::Type{S}) where {T<:CasadiSymbolicObject, S<:Number} = T
+promote_rule(::Type{T}, ::Type{S}) where {T<:CasadiSymbolicObject, S<:Real} = T
 convert(::Type{T}, o::PyCall.PyObject) where {T <: CasadiSymbolicObject} = T(o)
 convert(::Type{PyObject}, s::SX) = s.x
 ## real
@@ -8,7 +8,7 @@ convert(::Type{T}, x::SX) where {T <: Real} = convert(T, PyObject(x))
 
 """
 
-Convert a `SX` value to a numeric Julian value.
+Convert a numeric `SX` value to a numeric Julian value.
 
 """
 function N(x::SX)
@@ -29,5 +29,5 @@ function N(x::SX)
         end
     end
 end
-N(x::Number) = x
+N(x::Real) = x
 N(m::AbstractArray{SX}) = map(N, m)
