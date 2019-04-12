@@ -2,9 +2,9 @@
 promote_rule(::Type{T}, ::Type{S}) where {T<:CasadiSymbolicObject, S<:Real} = T
 convert(::Type{T}, o::PyCall.PyObject) where {T <: CasadiSymbolicObject} = T(o)
 convert(::Type{PyObject}, s::SX) = s.x
+
 ## real
-convert(::Type{S}, x::T) where {S<:CasadiSymbolicObject, T <: Real}= casadi.SX(x)::S
-convert(::Type{T}, x::SX) where {T <: Real} = convert(T, PyObject(x))
+convert(::Type{S}, x::T) where {S<:SX, T <: Real} = casadi.SX(x)::S
 
 """
 
