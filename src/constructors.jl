@@ -1,9 +1,13 @@
-SX(x::SX) = x
-SX(x::T) where {T <: Union{Real, AbstractVecOrMat}} = casadi.hcat([casadi.vcat(i) for i in eachcol(x)])
+for i ∈ casadi_types
+    @eval begin
+        $i(x::$i) = x
+        $i(x::T) where {T <: Union{Real, AbstractVecOrMat}} = casadi.hcat([casadi.vcat(i) for i in eachcol(x)])
 
-SX(x::AbstractString) = casadi.SX.sym(x)
-SX(x::AbstractString, i1::Integer) = casadi.SX.sym(x, i1, 1)
-SX(x::AbstractString, i1::Integer, i2::Integer) = casadi.SX.sym(x, i1, i2)
-convert(::Type{SX}, s::AbstractString) = SX(s)
+        $i(x::AbstractString) = casadi.$i.sym(x)
+        $i(x::AbstractString, i1::Integer) = casadi.$i.sym(x, i1, 1)
+        $i(x::AbstractString, i1::Integer, i2::Integer) = casadi.$i.sym(x, i1, i2)
+        convert(::Type{$i}, s::AbstractString) = $i(s)
 
-SX(i1::Integer, i2::Integer) = casadi.SX(i1, i2)
+        $i(i1::Integer, i2::Integer) = casadi.$i(i1, i2)
+    end
+end

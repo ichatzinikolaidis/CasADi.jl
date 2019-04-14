@@ -2,6 +2,7 @@ module CasADi
 
 using PyCall
 
+import Base: hcat, vcat
 import Base: show
 import Base: convert, promote_rule
 import Base: getproperty
@@ -9,7 +10,11 @@ import Base: length, size
 import Base.iterate
 import Base: +, -, *, /, \, ^
 
-export SX
+casadi_types = (:SX, :MX)
+for i ∈ casadi_types
+    @eval export $i
+end
+
 export True, False
 export N
 
@@ -40,7 +45,9 @@ function __init__()
     copy!(True.x, PyCall.PyObject(true))
     copy!(False.x, PyCall.PyObject(false))
 
-    pytype_mapping(casadi.SX, SX)
+    for i ∈ casadi_types
+        @eval pytype_mapping(casadi.$i, $i)
+    end
 end
 
 ## Add generic and new methods

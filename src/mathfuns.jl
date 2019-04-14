@@ -1,2 +1,2 @@
 ## Trig
-Base.sincos(x::SX) = (sin(x), cos(x))
+Base.sincos(x::CasadiSymbolicObject) = (sin(x), cos(x))

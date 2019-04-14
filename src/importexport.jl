@@ -1,12 +1,26 @@
-Base.inv(x::CasadiSymbolicObject) = getproperty(casadi, :inv)(x)
-Base.adjoint(x::CasadiSymbolicObject) = getproperty(casadi, :transpose)(x)
+# Overloaded CasADi methods
+generic_methods = (
+    # linear algebra
+    :inv,
 
-# trigonometric functions
-Base.cos(x::CasadiSymbolicObject) = getproperty(casadi, :cos)(x)
-Base.sin(x::CasadiSymbolicObject) = getproperty(casadi, :sin)(x)
+    # Trigonometric
+    :sin, :cos
+)
 
-Base.hcat(x::CasadiSymbolicObject) = getproperty(casadi, :hcat)(x)
-Base.vcat(x::CasadiSymbolicObject) = getproperty(casadi, :vcat)(x)
+for j ∈ generic_methods
+    @eval Base.$j(x::CasadiSymbolicObject) = getproperty( casadi, Symbol($j) )(x)
+end
 
-# SX specific
-Base.size(x::SX) = getproperty(casadi.SX, :size)(x)
+type_specific_methods = (
+    :size,
+)
+
+for i ∈ casadi_types, j ∈ type_specific_methods
+    @eval Base.$j(x::$i) = getproperty( casadi.$i, Symbol($j) )(x)
+end
+
+# Concatenation
+for i ∈ casadi_types
+    @eval Base.hcat(x::VecOrMat{$i}) = getproperty(casadi, :hcat)(x)
+    @eval Base.vcat(x::VecOrMat{$i}) = getproperty(casadi, :vcat)(x)
+end
