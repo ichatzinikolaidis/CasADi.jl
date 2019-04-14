@@ -22,8 +22,18 @@ for i ∈ casadi_types
             item = x.x.__getitem__( j1-1 + (j2-1)*casadi.$i.size1(x) )
         end
 
-        Base.lastindex(x::$i) = x.x.__getitem__(-1)
-        Base.firstindex(x::$i) = x.x.__getitem__(-1)
+        Base.lastindex(x::$i) = casadi.$i.numel(x)
+        function Base.lastindex(x::$i, j::Int)
+            if j == 1
+                return casadi.$i.size1(x)
+            elseif j == 2
+                return casadi.$i.size2(x)
+            elseif j > 2
+                return 1
+            else
+                throw( BoundsError(x, j) )
+            end
+        end
 
         ## one, zero, zeros, ones
         Base.one(::Type{$i}) = casadi.$i.eye(1)
