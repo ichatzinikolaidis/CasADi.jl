@@ -25,14 +25,20 @@ for i ∈ casadi_types
         Base.lastindex(x::$i) = x.x.__getitem__(-1)
         Base.firstindex(x::$i) = x.x.__getitem__(-1)
 
-        ## one, zero, ones
-        Base.one(::Type{$i}) = casadi.$i(1)
-        Base.one(x::$i) = casadi.$i(1)
+        ## one, zero, zeros, ones
+        Base.one(::Type{$i}) = casadi.$i.eye(1)
+        Base.one(x::$i) = casadi.$i.size1(x) == casadi.$i.size2(x) ?
+            casadi.$i.eye( casadi.$i.size1(x) ) :
+            throw(DimensionMismatch("multiplicative identity defined only for square matrices"))
 
         Base.zero(::Type{$i}) = casadi.$i.zeros()
-        Base.zero(::Type{$i}, j::Integer) = casadi.$i.zeros(j)
-        Base.zero(::Type{$i}, j1::Integer, j2::Integer) = casadi.$i.zeros(j1, j2)
-        Base.zero(x::$i) = casadi.$i.zeros()
+        Base.zero(x::$i) = casadi.$i.zeros( casadi.$i.size(x) )
+
+        Base.zeros(::Type{$i}, j::Integer) = casadi.$i.zeros(j)
+        Base.zeros(::Type{$i}, j1::Integer, j2::Integer) = casadi.$i.zeros(j1, j2)
+
+        Base.ones(::Type{$i}, j::Integer) = casadi.$i.zeros(j)
+        Base.ones(::Type{$i}, j1::Integer, j2::Integer) = casadi.$i.zeros(j1, j2)
 
         ## Adjoint and transpose
         Base.adjoint(x::$i) = casadi.transpose(x)
