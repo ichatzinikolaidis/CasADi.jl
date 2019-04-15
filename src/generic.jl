@@ -44,11 +44,12 @@ for i ∈ casadi_types
         Base.ones(::Type{$i}, j::Integer) = casadi.$i.zeros(j)
         Base.ones(::Type{$i}, j1::Integer, j2::Integer) = casadi.$i.zeros(j1, j2)
 
-        ## Adjoint and transpose
+        ## Matrix operations
         Base.adjoint(x::$i) = casadi.transpose(x)
         Base.transpose(x::$i) = casadi.transpose(x)
+        Base.repeat(x::$i, counts::Integer...) = casadi.repmat(x, counts...)
 
-        # Size related operations
+        ## Size related operations
         function Base.size(x::$i, j::Integer)
             if j == 1
                 return casadi.$i.size1(x)
