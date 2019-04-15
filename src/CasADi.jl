@@ -7,7 +7,7 @@ import Base: show
 import Base: convert, promote_rule
 import Base: getproperty
 import Base: length, size
-import Base.iterate
+import Base: Broadcast
 import Base: +, -, *, /, \, ^
 
 casadi_types = (:SX, :MX)

@@ -62,5 +62,8 @@ for i ∈ casadi_types
             end
         end
         Base.length(x::$i) = casadi.$i.numel(x)
+
+        ## Broadcasting
+        Broadcast.broadcasted(::typeof(*), x::$i, y::$i) = casadi.times(x, y)
     end
 end
