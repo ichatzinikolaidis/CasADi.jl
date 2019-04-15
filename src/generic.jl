@@ -1,6 +1,7 @@
 for i ∈ casadi_types
     @eval begin
         ## Indexing
+        # Get index
         Base.getindex(x::$i, j::Union{Int, UnitRange{Int}, Colon}) =
             x.x.__getitem__([1:length(x)...][j] .- 1)
 
@@ -21,6 +22,13 @@ for i ∈ casadi_types
             end
         end
 
+        # Set index
+        Base.setindex!(x::$i, v::Real, j::Union{Int, UnitRange{Int}, Colon}) =
+            x.x.__setitem__([1:length(x)...][j] .- 1, v)
+
+        Base.setindex!(x::$i, v::Real, j1::Union{Int, UnitRange{Int}, Colon}, j2::Union{Int, UnitRange{Int}, Colon}) =
+            x.x.__setitem__(LinearIndices( size(x) )[j1,j2] .- 1, v)
+
         ## one, zero, zeros, ones
         Base.one(::Type{$i}) = casadi.$i.eye(1)
         Base.one(x::$i) = casadi.$i.size1(x) == casadi.$i.size2(x) ?
@@ -40,6 +48,18 @@ for i ∈ casadi_types
         Base.adjoint(x::$i) = casadi.transpose(x)
         Base.transpose(x::$i) = casadi.transpose(x)
 
+        # Size related operations
+        function Base.size(x::$i, j::Integer)
+            if j == 1
+                return casadi.$i.size1(x)
+            elseif j == 2
+                return casadi.$i.size2(x)
+            elseif j > 2
+                return 1
+            else
+                error("arraysize: dimension out of range")
+            end
+        end
         Base.length(x::$i) = casadi.$i.numel(x)
     end
 end
