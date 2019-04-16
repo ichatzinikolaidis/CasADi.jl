@@ -46,7 +46,7 @@ for i ∈ casadi_types
 
         ## Matrix operations
         Base.adjoint(x::$i) = casadi.transpose(x)
-        Base.transpose(x::$i) = casadi.transpose(x)
+        Base.transpose(x::$i) = casadi.transpose(x)::$i
         Base.repeat(x::$i, counts::Integer...) = casadi.repmat(x, counts...)
 
         ## Size related operations
