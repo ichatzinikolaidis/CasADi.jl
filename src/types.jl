@@ -41,9 +41,5 @@ function Base.getproperty(o::T, s::Symbol) where {T <: CasadiSymbolicObject}
 end
 
 for i in casadi_types
-    @eval begin
-        function Base.convert(::Type{$i}, x::PyCall.PyObject)
-            $i(x)
-        end
-    end
+    @eval Base.convert(::Type{$i}, x::PyCall.PyObject) = $i(x)
 end

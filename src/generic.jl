@@ -67,3 +67,7 @@ for i ∈ casadi_types
         Broadcast.broadcasted(::typeof(*), x::$i, y::$i) = casadi.times(x, y)
     end
 end
+
+## Convert SX to array
+Base.convert(::Type{Array{SX,1}}, x::SX) = casadi.symvar(x)
+Base.convert(::Type{Array{SX,2}}, x::SX) = reshape( casadi.symvar(x), size(x) )
