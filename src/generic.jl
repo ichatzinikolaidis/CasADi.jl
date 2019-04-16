@@ -65,9 +65,15 @@ for i ∈ casadi_types
 
         ## Broadcasting
         Broadcast.broadcasted(::typeof(*), x::$i, y::$i) = casadi.times(x, y)
+
+        ## From array to CasADi
+        function Base.convert(::Type{$i}, M::AbstractMatrix{T}) where {T <: Number}
+            casadi.hcat([convert($i, M[:,i]) for i in 1:size(M,2)])
+        end
+        Base.convert(::Type{$i}, V::Vector{T}) where {T <: Number} = casadi.vcat(V)
     end
 end
 
 ## Convert SX to array
-Base.convert(::Type{Array{SX,1}}, x::SX) = casadi.symvar(x)
-Base.convert(::Type{Array{SX,2}}, x::SX) = reshape( casadi.symvar(x), size(x) )
+Base.convert(::Type{Array{SX,2}}, M::SX) = reshape(casadi.symvar(M), M.x.shape)
+Base.convert(::Type{Array{SX,1}}, M::SX) = casadi.symvar(M)
