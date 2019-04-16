@@ -1,7 +1,7 @@
 # Overloaded CasADi methods
 generic_methods = (
     # linear algebra
-    :inv,
+    :inv, :sqrt,
 
     # Trigonometric
     :sin, :cos
