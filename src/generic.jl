@@ -70,10 +70,10 @@ for i ∈ casadi_types
         function Base.convert(::Type{$i}, M::AbstractMatrix{T}) where {T <: Number}
             casadi.hcat([convert($i, M[:,i]) for i in 1:size(M,2)])
         end
-        Base.convert(::Type{$i}, V::Vector{T}) where {T <: Number} = casadi.vcat(V)
+        Base.convert(::Type{$i}, V::AbstractVector{T}) where {T <: Number} = casadi.vcat(V)
     end
 end
 
-## Convert SX to array
-Base.convert(::Type{Array{SX,2}}, M::SX) = reshape(casadi.symvar(M), M.x.shape)
-Base.convert(::Type{Array{SX,1}}, M::SX) = casadi.symvar(M)
+## Convert SX/MX to array
+Base.convert(::Type{Matrix{SX}}, M::SX) = reshape(casadi.SX.elements(M), M.x.shape)
+Base.convert(::Type{Vector{SX}}, V::SX) = casadi.SX.elements(V)
