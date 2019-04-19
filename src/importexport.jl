@@ -4,12 +4,16 @@ generic_methods = (
     :inv, :sqrt,
 
     # Trigonometric
-    :sin, :cos
+    :sin, :cos,
+
+    :vec
 )
 
 for j ∈ generic_methods
     @eval Base.$j(x::CasadiSymbolicObject) = getproperty( casadi, Symbol($j) )(x)
 end
+
+Base.reshape(x::CasadiSymbolicObject, t::Tuple{Int, Int}) = getproperty( casadi, Symbol(:reshape) )(x, t)
 
 type_specific_methods = (
     :size,
