@@ -5,8 +5,13 @@ for i ∈ casadi_types
         Base.getindex(x::$i, j::Union{Int, UnitRange{Int}, Colon}) =
             x.x.__getitem__([1:length(x)...][j] .- 1)
 
-        Base.getindex(x::$i, j1::Union{Int, UnitRange{Int}, Colon}, j2::Union{Int, UnitRange{Int}, Colon}) =
-            x.x.__getitem__(LinearIndices( size(x) )[j1,j2] .- 1)
+        function Base.getindex(x::$i, j1::Union{Int, UnitRange{Int}, Colon}, j2::Union{Int, UnitRange{Int}, Colon})
+            shape = ( typeof(j1) == Colon ? size(x, 1) : length(j1),
+                      typeof(j2) == Colon ? size(x, 2) : length(j2)
+            )
+
+            return reshape(x.x.__getitem__(LinearIndices( size(x) )[j1,j2] .- 1), shape)
+        end
 
         # Last index
         Base.lastindex(x::$i) = casadi.$i.numel(x)
