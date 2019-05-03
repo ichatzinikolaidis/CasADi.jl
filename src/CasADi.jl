@@ -9,6 +9,7 @@ import Base: getproperty
 import Base: length, size
 import Base: Broadcast
 import Base: +, -, *, /, \, ^
+import Base: >, >=, <, <=, ==
 
 casadi_types = (:SX, :MX)
 for i ∈ casadi_types
