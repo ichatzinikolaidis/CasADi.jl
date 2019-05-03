@@ -50,7 +50,7 @@ for i ∈ casadi_types
         Base.ones(::Type{$i}, j1::Integer, j2::Integer) = casadi.$i.zeros(j1, j2)
 
         ## Matrix operations
-        Base.adjoint(x::$i) = casadi.transpose(x)
+        Base.adjoint(x::$i) = casadi.transpose(x)::$i
         Base.transpose(x::$i) = casadi.transpose(x)::$i
         Base.repeat(x::$i, counts::Integer...) = casadi.repmat(x, counts...)
 
