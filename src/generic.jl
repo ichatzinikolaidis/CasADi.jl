@@ -72,10 +72,12 @@ for i ∈ casadi_types
         Broadcast.broadcasted(::typeof(*), x::$i, y::$i) = casadi.times(x, y)
 
         ## From array to CasADi
-        function Base.convert(::Type{$i}, M::AbstractMatrix{T}) where {T <: Number}
-            casadi.hcat([convert($i, M[:,i]) for i in 1:size(M,2)])
-        end
-        Base.convert(::Type{$i}, V::AbstractVector{T}) where {T <: Number} = casadi.vcat(V)
+        # function Base.convert(::Type{$i}, M::AbstractMatrix{T}) where {T <: Number}
+        #     casadi.hcat([convert($i, M[:,i]) for i = 1:size(M,2)]')
+        # end
+        # Base.convert(::Type{$i}, V::AbstractVector{T}) where {T <: Number} = casadi.vcat(V)
+
+        Base.convert(::Type{$i}, V::AbstractVecOrMat{T}) where {T <: Number} = casadi.$i(V)
     end
 end
 
