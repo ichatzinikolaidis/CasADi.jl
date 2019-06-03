@@ -19,7 +19,9 @@ end
 export True, False
 export N
 
-export casadi
+export
+    casadi,
+    substitute
 
 include("types.jl")
 include("constructors.jl")
