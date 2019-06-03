@@ -78,6 +78,10 @@ for i ∈ casadi_types
         # Base.convert(::Type{$i}, V::AbstractVector{T}) where {T <: Number} = casadi.vcat(V)
 
         Base.convert(::Type{$i}, V::AbstractVecOrMat{T}) where {T <: Number} = casadi.$i(V)
+
+        ## From CasADi to Float64/Int
+        Base.Float64(x::$i) = casadi.$i.__float__(x)
+        Base.Int(x::$i) = Base.Int( Float64(x) )
     end
 end
 
