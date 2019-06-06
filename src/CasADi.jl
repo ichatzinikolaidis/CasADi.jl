@@ -44,7 +44,7 @@ global False = SX(pynull())
 
 function __init__()
     ## Define casadi
-    copy!(casadi, PyCall.pyimport_conda("casadi", "casadi"))
+    copy!(casadi, PyCall.pyimport_conda("casadi", "casadi", "conda-forge"))
     copy!(True.x, PyCall.PyObject(true))
     copy!(False.x, PyCall.PyObject(false))
 
