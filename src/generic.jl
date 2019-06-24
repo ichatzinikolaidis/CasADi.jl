@@ -72,7 +72,7 @@ for i ∈ casadi_types
     ## Broadcasting
     Broadcast.broadcasted(::typeof(*), x::$i, y::$i) = casadi.times(x, y)
 
-    ## From array to CasADi
+    ## To/From array
     # function Base.convert(::Type{$i}, M::AbstractMatrix{T}) where {T <: Number}
     #     casadi.hcat([convert($i, M[:,i]) for i = 1:size(M,2)]')
     # end
@@ -80,14 +80,18 @@ for i ∈ casadi_types
 
     Base.convert(::Type{$i}, V::AbstractVecOrMat{T}) where {T <: Number} = casadi.$i(V)
 
+    # Convert SX/MX to vector
+    function Base.Vector(V::$i)
+      [V[i] for i = 1:length(V)]
+    end
+
+    # Convert SX/MX to matrix
+    function Base.Matrix(M::$i)
+      [M[i,j] for i = 1:size(M,1), j = 1:size(M,2)]
+    end
+
     ## From CasADi to Float64/Int
     Base.Float64(x::$i) = casadi.$i.__float__(x)
     Base.Int(x::$i) = Base.Int( Float64(x) )
   end
 end
-
-## Convert SX/MX to array
-Base.convert(::Type{Matrix{SX}}, M::SX) = reshape(casadi.SX.elements(M), M.x.shape)
-Base.convert(::Type{Vector{SX}}, V::SX) = casadi.SX.elements(V)
-Base.Vector(V::SX) = casadi.SX.elements(V)
-Base.Matrix(M::SX) = reshape(casadi.SX.elements(M), M.x.shape)
