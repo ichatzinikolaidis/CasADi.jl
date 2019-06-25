@@ -47,8 +47,8 @@ for i ∈ casadi_types
     Base.zeros(::Type{$i}, j::Integer) = casadi.$i.zeros(j)
     Base.zeros(::Type{$i}, j1::Integer, j2::Integer) = casadi.$i.zeros(j1, j2)
 
-    Base.ones(::Type{$i}, j::Integer) = casadi.$i.zeros(j)
-    Base.ones(::Type{$i}, j1::Integer, j2::Integer) = casadi.$i.zeros(j1, j2)
+    Base.ones(::Type{$i}, j::Integer) = casadi.$i.ones(j)
+    Base.ones(::Type{$i}, j1::Integer, j2::Integer) = casadi.$i.ones(j1, j2)
 
     ## Matrix operations
     Base.adjoint(x::$i) = casadi.transpose(x)::$i
@@ -73,21 +73,24 @@ for i ∈ casadi_types
     Broadcast.broadcasted(::typeof(*), x::$i, y::$i) = casadi.times(x, y)
 
     ## To/From array
-    # function Base.convert(::Type{$i}, M::AbstractMatrix{T}) where {T <: Number}
-    #     casadi.hcat([convert($i, M[:,i]) for i = 1:size(M,2)]')
-    # end
-    # Base.convert(::Type{$i}, V::AbstractVector{T}) where {T <: Number} = casadi.vcat(V)
+    # From vector to SX/MX
+    function Base.convert(::Type{$i}, V::AbstractVector{$i})
+      casadi.vcat(V)
+    end
 
-    Base.convert(::Type{$i}, V::AbstractVecOrMat{T}) where {T <: Number} = casadi.$i(V)
+    # From matrix to SX/MX
+    function Base.convert(::Type{$i}, M::AbstractMatrix{$i})
+      casadi.blockcat(M)
+    end
 
     # Convert SX/MX to vector
     function Base.Vector(V::$i)
-      [V[i] for i = 1:length(V)]
+      casadi.vertsplit(V)
     end
 
     # Convert SX/MX to matrix
     function Base.Matrix(M::$i)
-      [M[i,j] for i = 1:size(M,1), j = 1:size(M,2)]
+      casadi.blocksplit(M)
     end
 
     ## From CasADi to Float64/Int

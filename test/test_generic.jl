@@ -8,11 +8,10 @@ cas_symbol = [:SX, :MX]
     M = $i("M1", 2, 4) - $i("M2", 2, 4)
 
     @test Vector(null_symbol) == Vector{Any}()
-    @test Matrix(null_symbol) == Matrix{Any}(undef,0,1)
-    @test Float64.(Vector(scalar) - [scalar]) == zeros(1)
-    @test Float64.(Matrix(scalar) - [scalar]) == zeros(1,1)
-    @test Float64.(Vector(V) - [V[1] ; V[2] ; V[3]]) == zeros(3)
-    @test Float64.(Matrix(M) - [M[1,1] M[1,2] M[1,3] M[1,4];
-                                M[2,1] M[2,2] M[2,3] M[2,4]]) == zeros(2,4)
+    @test Matrix(null_symbol) == Vector{Any}(undef,0)
+    @test casadi.is_equal($i( Vector(scalar) ), scalar)
+    @test casadi.is_equal($i( Matrix(scalar) ), scalar)
+    @test casadi.is_equal($i( Vector(V) ), V, 1)
+    @test casadi.is_equal($i( Matrix(M) ), M, 1)
   end
 end
