@@ -1,6 +1,4 @@
-cas_symbol = [:SX, :MX]
-
-@testset "Transform $i to null, scalar, Vector, and Matrix" for i ∈ cas_symbol
+@testset "Transform $i to null, scalar, Vector, and Matrix " for i ∈ cas_symbol
   @eval begin
     null_symbol = $i("null_symbol", 0)
     scalar = $i("scalar", 1)
