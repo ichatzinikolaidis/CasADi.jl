@@ -3,6 +3,8 @@ for i ∈ casadi_types
         $i(x::$i) = x
         $i(x::T) where {T <: Real} = casadi.$i(x)
         $i(x::T) where {T <: AbstractVecOrMat{$i}} = convert($i, x)
+        $i(x::AbstractVecOrMat{T}) where {T <: AbstractFloat} = casadi.$i(x)
+        $i(x::AbstractVecOrMat{T}) where {T <: Integer} = casadi.$i(x)
 
         $i(x::AbstractString) = casadi.$i.sym(x)
         $i(x::AbstractString, i1::Integer) = casadi.$i.sym(x, i1)

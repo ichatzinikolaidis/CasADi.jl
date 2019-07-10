@@ -26,3 +26,13 @@ end
     @test casadi.is_equal(casadi.substitute(m,m,m_val), casadi.substitute(M,M,m_val), 1)
   end
 end
+
+@testset "AbstractFloat and Integer constructors           " for i ∈ cas_symbol
+  @eval begin
+    af = [1.2 ; -0.0 ; -4.3]
+    @test casadi.is_equal($i(af)', casadi.$i(af)', 2)
+
+    int = [1 ; 0 ; -2]
+    @test casadi.is_equal($i(int)', casadi.$i(int)', 2)
+  end
+end
