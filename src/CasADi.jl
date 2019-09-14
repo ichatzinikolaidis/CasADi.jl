@@ -11,6 +11,8 @@ import Base: Broadcast
 import Base: +, -, *, /, \, ^
 import Base: >, >=, <, <=, ==
 
+import LinearAlgebra: cross
+
 casadi_types = (:SX, :MX)
 for i ∈ casadi_types
     @eval export $i
