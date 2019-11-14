@@ -19,11 +19,8 @@ for i ∈ casadi_types
 end
 
 export True, False
-export to_julia 
 
-export
-    casadi,
-    substitute
+export casadi, to_julia, substitute
 
 include("types.jl")
 include("constructors.jl")

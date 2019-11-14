@@ -9,6 +9,20 @@ pycall_hasproperty(x, k) = false
 ## Extra functions
 for i ∈ casadi_types
     @eval begin
-        substitute(ex::Vector{$i}, vars::Vector{$i}, vals::Union{Vector{Float64}, Vector{$i}}) = casadi.substitute(ex, [vcat(vars)], [vcat(vals)])
+        substitute(
+          ex::Union{$i, AbstractVector{$i}, AbstractMatrix{$i}},
+          vars::$i,
+          vals::Number
+        ) = casadi.substitute( $i(ex), $i(vars), $i(vals) )
+        substitute(
+          ex::Union{$i, AbstractVector{$i}, AbstractMatrix{$i}},
+          vars::AbstractVector{$i},
+          vals::AbstractVector
+        ) = casadi.substitute( $i(ex), $i(vars), $i(vals) )
+        substitute(
+          ex::Union{$i, AbstractVector{$i}, AbstractMatrix{$i}},
+          vars::AbstractMatrix{$i},
+          vals::AbstractMatrix
+        ) = casadi.substitute( $i(ex), $i(vars), $i(vals) )
     end
 end
