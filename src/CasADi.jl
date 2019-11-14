@@ -19,7 +19,7 @@ for i ∈ casadi_types
 end
 
 export True, False
-export N
+export to_julia 
 
 export
     casadi,

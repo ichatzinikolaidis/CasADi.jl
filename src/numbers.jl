@@ -5,34 +5,32 @@ convert(::Type{T}, o::PyCall.PyObject) where {T <: CasadiSymbolicObject} = T(o)
 for i ∈ casadi_types
     @eval begin
         convert(::Type{PyObject}, s::$i) = s.x
-
-        ## real
-        convert(::Type{S}, x::T) where {S<:$i, T <: Real} = casadi.$i(x)::S
-
-        """
-
-        Convert a numeric CasADi value to a numeric Julian value.
-
-        """
-        function N(x::$i)
-            if x.x.is_scalar()
-                if x.x.is_constant()
-                    if x.x.is_zero()
-                        return 0
-                    elseif (x.x == x.x.inf() ).is_one()
-                        return Inf
-                    elseif (x.x == -x.x.inf() ).is_one()
-                        return -Inf
-                    end
-                    if x.x.is_integer()
-                        return convert(Int64, x)
-                    else
-                        return convert(Float64, x)
-                    end
-                end
-            end
-        end
-        N(m::AbstractArray{$i}) = map(N, m)
     end
 end
-N(x::Real) = x
+
+"""
+
+Convert a numeric CasADi value to a numeric Julia value.
+
+"""
+function to_julia(x::SX)
+    if x.is_scalar()
+        return casadi.DM(x).__array__()[1]
+    end
+    if x.is_vector()
+        return casadi.DM(x).__array__()[:]
+    end
+
+    return casadi.DM(x).__array__()
+end
+
+function to_julia(x::MX)
+    if x.is_scalar()
+        return x.to_DM().__array__()[1]
+    end
+    if x.is_vector()
+        return x.to_DM().__array__()[:]
+    end
+
+    return x.to_DM().__array__()
+end
