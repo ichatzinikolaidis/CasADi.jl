@@ -17,6 +17,7 @@ casadi_types = (:SX, :MX)
 for i ∈ casadi_types
     @eval export $i
 end
+export CasadiSymbolicObject
 
 export True, False
 
