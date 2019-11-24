@@ -1,3 +1,4 @@
+__precompile__()
 module CasADi
 
 using PyCall
@@ -7,7 +8,6 @@ import Base: show
 import Base: convert, promote_rule
 import Base: getproperty
 import Base: length, size
-import Base: Broadcast
 import Base: +, -, *, /, \, ^
 import Base: >, >=, <, <=, ==
 
@@ -18,8 +18,6 @@ for i ∈ casadi_types
     @eval export $i
 end
 export CasadiSymbolicObject
-
-export True, False
 
 export casadi, to_julia, substitute
 
@@ -33,20 +31,11 @@ include("utils.jl")
 
 ##################################################
 
-pynull() = PyCall.PyNULL()
-const casadi = pynull()
-const mpmath = pynull()
-
-"True from CasADi"
-global True = SX(pynull())
-"False from CasADi"
-global False = SX(pynull())
+const casadi = PyNULL()
 
 function __init__()
     ## Define casadi
-    copy!(casadi, PyCall.pyimport_conda("casadi", "casadi", "conda-forge"))
-    copy!(True.x, PyCall.PyObject(true))
-    copy!(False.x, PyCall.PyObject(false))
+    copy!(casadi, pyimport_conda("casadi", "casadi", "conda-forge"))
 
     for i ∈ casadi_types
         @eval pytype_mapping(casadi.$i, $i)

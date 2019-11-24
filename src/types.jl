@@ -9,6 +9,8 @@ for i in casadi_types
         struct $i <: CasadiSymbolicObject
             x::PyCall.PyObject
         end
+
+        Base.convert(::Type{$i}, x::PyCall.PyObject) = $i(x)
     end
 end
 
@@ -20,26 +22,10 @@ PyCall.PyObject(x::CasadiSymbolicObject) = x.x
 
 ##################################################
 
-function jprint(x::CasadiSymbolicObject)
-    out = PyCall.pycall(pybuiltin("str"), String, PyObject(x))
-    out = replace(out, r"\*\*" => "^")
-    out
-end
-
 ## text/plain
-for i in casadi_types
-    @eval Base.show(io::IO, s::$i) = print(io, jprint(s))
-end
-Base.show(io::IO, ::MIME"text/plain", s::CasadiSymbolicObject) = print(io, jprint(s))
+jprint(x::CasadiSymbolicObject) = PyCall.pycall(pybuiltin("str"), String, PyObject(x))
+Base.show(io::IO, s::CasadiSymbolicObject) = print(io, jprint(s))
 
-function Base.getproperty(o::T, s::Symbol) where {T <: CasadiSymbolicObject}
-    if (s in fieldnames(T))
-        getfield(o, s)
-    else
-        getproperty(PyCall.PyObject(o), s)
-    end
-end
-
-for i in casadi_types
-    @eval Base.convert(::Type{$i}, x::PyCall.PyObject) = $i(x)
-end
+Base.getproperty(o::T, s::Symbol) where {T <: CasadiSymbolicObject} =
+    if (s in fieldnames(T)) getfield(o, s)
+    else getproperty(PyCall.PyObject(o), s) end

@@ -1,22 +1,23 @@
-for i ∈ casadi_types
-    @eval begin
-        ## Binary operations
-        +(x::$i, y::$i) = pycall(casadi.plus, $i, x, y)
-        *(x::$i, y::$i) = pycall(casadi.mtimes, $i, x, y)
-        -(x::$i, y::$i) = pycall(casadi.minus, $i, x, y)
-        -(x::$i) = pycall(casadi.minus, $i, 0, x)
-        /(x::$i, y::$i) = pycall(casadi.mrdivide, $i, x, y)
-        ^(x::$i, y::$i) = pycall(casadi.power, $i, x, y)
-        \(x::$i, y::$i) = pycall(casadi.mldivide, $i, x, y)
+## Unary operations
+-(x::T) where T <: CasadiSymbolicObject = casadi.minus(0., x)
 
-        ## Comparisons
-        >=(x::$i, y::Real) = pycall(casadi.ge, $i, x, y)
-        >(x::$i, y::Real)  = pycall(casadi.gt, $i, x, y)
-        <=(x::$i, y::Real) = pycall(casadi.le, $i, x, y)
-        <(x::$i, y::Real)  = pycall(casadi.lt, $i, x, y)
-        ==(x::$i, y::Real) = pycall(casadi.eq, $i, x, y)
+## Binary operations
++(x::T, y::T) where T <: CasadiSymbolicObject = casadi.plus(x, y)
+-(x::T, y::T) where T <: CasadiSymbolicObject = casadi.minus(x, y)
+/(x::T, y::T) where T <: CasadiSymbolicObject = casadi.mrdivide(x, y)
+^(x::T, y::T) where T <: CasadiSymbolicObject = casadi.power(x, y)
+\(x::T, y::T) where T <: CasadiSymbolicObject = casadi.solve(x, y)
 
-        ## Linear algebra
-        cross(x::$i, y::$i) = casadi.cross(x, y)
-    end
-end
+*(x::Union{C, T}, y::Union{C, T}) where {C <: CasadiSymbolicObject, T <: Real} =
+  if size(x,2) == size(y,1) casadi.mtimes( C(x), C(y) )
+  else casadi.times( C(x), C(y) ) end
+
+## Comparisons
+>=(x::T, y::T) where T <: CasadiSymbolicObject = casadi.ge(x, y)
+>(x::T, y::T)  where T <: CasadiSymbolicObject = casadi.gt(x, y)
+<=(x::T, y::T) where T <: CasadiSymbolicObject = casadi.le(x, y)
+<(x::T, y::T)  where T <: CasadiSymbolicObject = casadi.lt(x, y)
+==(x::T, y::T) where T <: CasadiSymbolicObject = casadi.eq(x, y)
+
+## Linear algebra
+cross(x::T, y::T) where T <: CasadiSymbolicObject = casadi.cross(x, y)
