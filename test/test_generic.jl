@@ -143,6 +143,13 @@ function test_generic(::Type{T}) where T <: CasadiSymbolicObject
           "arraysize: dimension out of range") size(zeros(T,3,3),3)
     end
 
+    @testset "$( string("Concatenations for ", T, "                            ") )" begin
+        M = rand(3,3)
+
+        @test to_julia( hcat([T(M) ; T(M)]) ) ≈ hcat(M, M)
+        @test to_julia( vcat([T(M) ; T(M)]) ) ≈ vcat(M, M)
+    end
+
     @testset "$( string("Matrix operations for ", T, "                         ") )" begin
         m = rand(5,3)
         s = rand(6,6)
@@ -151,9 +158,6 @@ function test_generic(::Type{T}) where T <: CasadiSymbolicObject
 
         @test to_julia( adjoint(M) ) ≈ m'
         @test to_julia( repeat(M,2,3) ) ≈ repeat(m,2,3)
-        @test eltype( transpose(M) ) == T
-        @test eltype( transpose( Matrix(M) ) ) == T
-        @test eltype( Symmetric( Matrix(S) ) ) == T
     end
 
     @testset "$( string("Broadcasting for ", T, "                              ") )" begin
@@ -168,5 +172,16 @@ function test_generic(::Type{T}) where T <: CasadiSymbolicObject
         @test to_julia(M₁.^M₂)  ≈ m₁.^m₂
         @test to_julia(M₁.^3)   ≈ m₁.^3
         @test to_julia(M₁.^2.1) ≈ m₁.^2.1
+    end
+
+    @testset "$( string("Return types for ", T, "                              ") )" begin
+        M = T( rand(5,3) )
+        S = T( rand(6,6) )
+
+        @test eltype( transpose(M) ) == T
+        @test eltype( transpose( Matrix(M) ) ) == T
+        @test eltype( Symmetric( Matrix(S) ) ) == T
+
+        @test eltype( Symmetric( Matrix( T(rand(5,5)) ) ) * Matrix( T(rand(5,5)) ) ) == T
     end
 end

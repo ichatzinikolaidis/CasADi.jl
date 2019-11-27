@@ -13,11 +13,4 @@ function test_importexport(::Type{T}) where T <: CasadiSymbolicObject
         @test size( T(M) ) == size(M)
         @test to_julia( reshape( T(M), (9,1) ) ) ≈ reshape( M, (9,1) )
     end
-
-    @testset "$( string("Concatenations for ", T, "                            ") )" begin
-        M = rand(3,3)
-
-        @test to_julia( hcat([T(M) ; T(M)]) ) ≈ hcat(M, M)
-        @test to_julia( vcat([T(M) ; T(M)]) ) ≈ vcat(M, M)
-    end
 end

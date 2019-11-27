@@ -1,17 +1,13 @@
-# Overloaded CasADi methods
-generic_methods = (
+unary_homonymous_methods = (
     :inv, :sqrt,
     :sin, :cos,
-    :vec
+    :vec, :transpose
 )
-for j ∈ generic_methods
-    @eval Base.$j(x::CasadiSymbolicObject) = getproperty( casadi, Symbol($j) )(x)
+for j ∈ unary_homonymous_methods
+    @eval Base.$j(x::T) where T <: CasadiSymbolicObject = pycall(casadi.$j, T, x)
 end
 
-for i ∈ casadi_types
-    @eval Base.hcat(x::Vector{$i}) = getproperty(casadi, :hcat)(x)
-    @eval Base.vcat(x::Vector{$i}) = getproperty(casadi, :vcat)(x)
-end
+Base.size(x::T) where T <: CasadiSymbolicObject = x.size()
 
-Base.size(x::CasadiSymbolicObject) = x.size()
-Base.reshape(x::CasadiSymbolicObject, t::Tuple{Int, Int}) = getproperty( casadi, Symbol(:reshape) )(x, t)
+Base.reshape(x::T, t::Tuple{Int, Int}) where T <: CasadiSymbolicObject =
+  pycall(casadi.reshape, T, x, t)

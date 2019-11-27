@@ -65,17 +65,22 @@ for i ∈ casadi_types
     end
 end
 
+## Concatenations
+Base.hcat(x::Vector{T}) where T <: CasadiSymbolicObject = pycall(casadi.hcat, T, x)
+Base.vcat(x::Vector{T}) where T <: CasadiSymbolicObject = pycall(casadi.vcat, T, x)
+
 ## Matrix operations
-Base.transpose(x::T) where T <: CasadiSymbolicObject = casadi.transpose(x)::T
 Base.adjoint(x::CasadiSymbolicObject) = transpose(x)
 Base.repeat(x::CasadiSymbolicObject, counts::Integer...) = casadi.repmat(x, counts...)
 
 ## To/From array
 # From vector to SX/MX
-Base.convert(::Type{C}, V::AbstractVector{C}) where C <: CasadiSymbolicObject = casadi.vcat(V)
+Base.convert(::Type{Τ}, V::AbstractVector{Τ}) where Τ <: CasadiSymbolicObject =
+  casadi.vcat(V)
 
 # From matrix to SX/MX
-Base.convert(::Type{C}, M::AbstractMatrix{C}) where C <: CasadiSymbolicObject = casadi.blockcat(M)
+Base.convert(::Type{Τ}, M::AbstractMatrix{Τ}) where Τ <: CasadiSymbolicObject =
+  casadi.blockcat(M)
 
 # Convert SX/MX to vector
 Base.Vector(V::CasadiSymbolicObject) = casadi.vertsplit(V)
