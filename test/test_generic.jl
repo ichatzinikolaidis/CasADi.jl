@@ -145,10 +145,15 @@ function test_generic(::Type{T}) where T <: CasadiSymbolicObject
 
     @testset "$( string("Matrix operations for ", T, "                         ") )" begin
         m = rand(5,3)
+        s = rand(6,6)
         M = T(m)
+        S = T(s)
 
         @test to_julia( adjoint(M) ) ≈ m'
         @test to_julia( repeat(M,2,3) ) ≈ repeat(m,2,3)
+        @test eltype( transpose(M) ) == T
+        @test eltype( transpose( Matrix(M) ) ) == T
+        @test eltype( Symmetric( Matrix(S) ) ) == T
     end
 
     @testset "$( string("Broadcasting for ", T, "                              ") )" begin

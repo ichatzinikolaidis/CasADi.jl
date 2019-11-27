@@ -66,6 +66,7 @@ for i ∈ casadi_types
 end
 
 ## Matrix operations
+Base.transpose(x::T) where T <: CasadiSymbolicObject = casadi.transpose(x)::T
 Base.adjoint(x::CasadiSymbolicObject) = transpose(x)
 Base.repeat(x::CasadiSymbolicObject, counts::Integer...) = casadi.repmat(x, counts...)
 

@@ -2,7 +2,7 @@
 generic_methods = (
     :inv, :sqrt,
     :sin, :cos,
-    :vec, :transpose
+    :vec
 )
 for j ∈ generic_methods
     @eval Base.$j(x::CasadiSymbolicObject) = getproperty( casadi, Symbol($j) )(x)
