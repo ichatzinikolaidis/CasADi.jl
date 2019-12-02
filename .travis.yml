@@ -5,6 +5,8 @@ os:
 dist: xenial
 julia:
   - 1.1
+  - 1.2
+  - 1.3
   - nightly
 matrix:
   allow_failures:
@@ -13,5 +15,4 @@ notifications:
   email: false
 env:
   global:
-    - CODECOV_TOKEN="527112a2-2440-4364-9d06-9f03920fbb87"
     - PYTHON=""
