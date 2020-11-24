@@ -184,4 +184,11 @@ function test_generic(::Type{T}) where T <: CasadiSymbolicObject
 
         @test eltype( Symmetric( Matrix( T(rand(5,5)) ) ) * Matrix( T(rand(5,5)) ) ) == T
     end
+
+    @testset "$( string("Solve linear systems with ", T, "                     ") )" begin
+        A = Matrix(2one(T(3,3)))
+        b = Vector(T([2, 4, 8]))
+
+        @test to_julia.(A\b) ≈ [1.0, 2.0, 4.0]
+    end
 end

@@ -81,3 +81,6 @@ Base.Vector(V::CasadiSymbolicObject) = casadi.vertsplit(V)
 
 # Convert SX/MX to matrix
 Base.Matrix(M::CasadiSymbolicObject) = casadi.blocksplit(M)
+
+## Solve linear systems
+Base.:\(A::Matrix{C}, b::Vector{C}) where C <: CasadiSymbolicObject = Vector(casadi.solve(C(A), C(b)))
