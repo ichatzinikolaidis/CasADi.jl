@@ -1,7 +1,6 @@
 ## promote up to symbolic so that math ops work
-promote_rule(::Type{T}, ::Type{S}) where {T<:CasadiSymbolicObject, S<:Real} = T
-convert(::Type{T}, o::PyCall.PyObject) where {T <: CasadiSymbolicObject} = T(o)
-convert(::Type{PyObject}, s::CasadiSymbolicObject) = s.x
+promote_rule(::Type{T}, ::Type{S}) where {T <: CasadiSymbolicObject, S <: Real} = T
+convert(::Type{PyObject}, s::CasadiSymbolicObject) = s.__pyobject__
 
 """
 

@@ -20,4 +20,4 @@
 ==(x::T, y::T) where T <: CasadiSymbolicObject = pycall(casadi.eq, T, x, y)
 
 ## Linear algebra
-cross(x::T, y::T) where T <: CasadiSymbolicObject = pycall(casadi.cross, T, x, y)
+×(x::T, y::T) where T <: CasadiSymbolicObject = pycall(casadi.cross, T, x, y)

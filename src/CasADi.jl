@@ -3,22 +3,12 @@ module CasADi
 
 using PyCall
 
-import Base: hcat, vcat
-import Base: show
-import Base: convert, promote_rule
-import Base: getproperty
-import Base: length, size
+import Base: convert, getproperty, hcat, length, promote_rule, show, size, vcat
 import Base: +, -, *, /, \, ^
 import Base: >, >=, <, <=, ==
+import LinearAlgebra: ×
 
-import LinearAlgebra: cross
-
-casadi_types = (:SX, :MX)
-for i ∈ casadi_types
-    @eval export $i
-end
-export CasadiSymbolicObject
-
+export CasadiSymbolicObject, SX, MX
 export casadi, to_julia, substitute
 
 include("types.jl")
@@ -37,9 +27,8 @@ function __init__()
     ## Define casadi
     copy!(casadi, pyimport_conda("casadi", "casadi", "conda-forge"))
 
-    for i ∈ casadi_types
-        @eval pytype_mapping(casadi.$i, $i)
-    end
+    pytype_mapping(casadi.SX, SX)
+    pytype_mapping(casadi.MX, MX)
 end
 
 ## Add generic and new methods
