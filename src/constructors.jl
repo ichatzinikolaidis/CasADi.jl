@@ -1,16 +1,19 @@
-for i ∈ casadi_types
-    @eval begin
-        $i(x::$i) = x
-        $i(x::T) where {T <: Real} = casadi.$i(x)
-        $i(x::T) where {T <: AbstractVecOrMat{$i}} = convert($i, x)
-        $i(x::AbstractVecOrMat{T}) where {T <: AbstractFloat} = casadi.$i(x)
-        $i(x::AbstractVecOrMat{T}) where {T <: Integer} = casadi.$i(x)
+SX(x::T) where {T <: Real} = casadi.SX(x)
+SX(x::T) where {T <: AbstractVecOrMat{SX}} = convert(SX, x)
+SX(x::AbstractVecOrMat{T}) where {T <: AbstractFloat} = casadi.SX(x)
+SX(x::AbstractVecOrMat{T}) where {T <: Integer} = casadi.SX(x)
+SX(x::AbstractString) = casadi.SX.sym(x)
+SX(x::AbstractString, i1::Integer) = casadi.SX.sym(x, i1)
+SX(x::AbstractString, i1::Integer, i2::Integer) = casadi.SX.sym(x, i1, i2)
+SX(i1::Integer, i2::Integer) = casadi.SX(i1, i2)
 
-        $i(x::AbstractString) = casadi.$i.sym(x)
-        $i(x::AbstractString, i1::Integer) = casadi.$i.sym(x, i1)
-        $i(x::AbstractString, i1::Integer, i2::Integer) = casadi.$i.sym(x, i1, i2)
-        convert(::Type{$i}, s::AbstractString) = $i(s)
+MX(x::T) where {T <: Real} = casadi.MX(x)
+MX(x::T) where {T <: AbstractVecOrMat{MX}} = convert(MX, x)
+MX(x::AbstractVecOrMat{T}) where {T <: AbstractFloat} = casadi.MX(x)
+MX(x::AbstractVecOrMat{T}) where {T <: Integer} = casadi.MX(x)
+MX(x::AbstractString) = casadi.MX.sym(x)
+MX(x::AbstractString, i1::Integer) = casadi.MX.sym(x, i1)
+MX(x::AbstractString, i1::Integer, i2::Integer) = casadi.MX.sym(x, i1, i2)
+MX(i1::Integer, i2::Integer) = casadi.MX(i1, i2)
 
-        $i(i1::Integer, i2::Integer) = casadi.$i(i1, i2)
-    end
-end
+convert(::Type{C}, s::AbstractString) where C <: CasadiSymbolicObject = C(s)
