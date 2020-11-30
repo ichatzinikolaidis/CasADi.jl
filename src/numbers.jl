@@ -1,4 +1,4 @@
-## promote up to symbolic so that math ops work
+## promote up to symbolic so that mathops work
 promote_rule(::Type{T}, ::Type{S}) where {T <: CasadiSymbolicObject, S <: Real} = T
 convert(::Type{PyObject}, s::CasadiSymbolicObject) = s.__pyobject__
 

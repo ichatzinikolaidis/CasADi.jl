@@ -12,13 +12,13 @@ Base.getindex(
 
 Base.setindex!(
   x::CasadiSymbolicObject,
-  v::Real,
+  v::Number,
   j::Union{Int, UnitRange{Int}, Colon}
 ) = set!(x.__pyobject__, ( 1:length(x) )[if (j isa Int) j:j else j end] .- 1, v)
 
 function Base.setindex!(
   x::CasadiSymbolicObject,
-  v::Real,
+  v::Number,
   j1::Union{Int, UnitRange{Int}, Colon},
   j2::Union{Int, UnitRange{Int}, Colon}
 )
